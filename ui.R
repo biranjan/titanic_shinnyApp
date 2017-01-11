@@ -27,17 +27,17 @@ ui <- fluidPage(
                       value = "Enter name"),
             
             selectInput("Sex",
-                        label = "Select your sex",
+                        label = "Select your gender",
                         choices = list("male","female"),
                         selected = "male"),
             
             radioButtons("Pclass",
-                        label = "Selecet you Passenger class",
+                        label = "Select your Passenger class",
                         choices = list("choice 1"=1,"choice 2"=2,
                                        "choice 3"=3,"choice 4"=4)),
             
             numericInput("Age", 
-                         label = ("Selet you Age"), 
+                         label = ("Select your Age"), 
                          value = 20),
             
             
@@ -53,7 +53,7 @@ ui <- fluidPage(
         ),
         
         
-        # Show a plot of the generated distribution
+        # Show a output: in this case text with the result of prediction
         mainPanel(
             div(id = "panel",textOutput("text2"),
             h4(textOutput("pred"))),
