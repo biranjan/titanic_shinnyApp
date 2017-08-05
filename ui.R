@@ -9,6 +9,7 @@
 
 ui <- fluidPage(
     theme = "bootstrap.css",
+    title = "Titanic",
     # Application title
     titlePanel(h1("Titanic - Dead or Alive",align  = "center")),
     headerPanel(h2("Buy Ticket here")),
@@ -55,15 +56,14 @@ ui <- fluidPage(
         
         # Show a output: in this case text with the result of prediction
         mainPanel(
+            
             div(id = "panel",textOutput("text2"),
             h4(textOutput("pred"))),
             
-            img(img(src="img/pic.png"))
+            img(img(src="img/pic.png",width="600px"))
             )
         
-        
+     
     )
     
 )
-
-
