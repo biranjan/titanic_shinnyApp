@@ -1,19 +1,13 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
 
+library(highcharter)
 ui <- fluidPage(
     theme = "bootstrap.css",
     title = "Titanic",
     # Application title
     titlePanel(h1("Titanic - Dead or Alive",align  = "center")),
     headerPanel(h2("Buy Ticket here")),
-    # Sidebar with a slider input for number of bins 
+    # Sidebar with input options
+    # Here we'll be asking necessary information to feed into new model
     sidebarLayout(
         sidebarPanel(
             helpText(("Your information")),
@@ -24,8 +18,7 @@ ui <- fluidPage(
                         selected = "Mr"),
             
             textInput("Name",
-                      label = "Your name",
-                      value = "Enter name"),
+                      label = "Your name"),
             
             selectInput("Sex",
                         label = "Select your gender",
@@ -38,14 +31,14 @@ ui <- fluidPage(
                                        "choice 3"=3,"choice 4"=4)),
             
             numericInput("Age", 
-                         label = ("Select your Age"), 
+                         label = ("Select your Age"),  
                          value = 20),
             
             
             radioButtons("Embark",
                          label = "Select the port of embarkation",
-                         choices = list("Cherbourg","Queenstown","Southampton"),
-                         selected = "Queenstown" ),
+                         choices = list("Cherbourg"="C","Queenstown"="Q","Southampton"="S"),
+                         selected = "C" ),
             
             actionButton("Confirm",
                             "Confrim ticket")
@@ -53,13 +46,15 @@ ui <- fluidPage(
             
         ),
         
-        
+        # Here we'll sho the result of prediction
         # Show a output: in this case text with the result of prediction
+        
         mainPanel(
             
             div(id = "panel",textOutput("text2"),
-            h4(textOutput("pred"))),
-            
+            div(uiOutput("pred"))),
+            div(id = "placeholder"),
+            highchartOutput("dem_pie"),
             img(img(src="img/pic.png",width="600px"))
             )
         

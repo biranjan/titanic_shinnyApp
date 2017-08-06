@@ -8,72 +8,44 @@
 #
 
 library(shiny)
+library(highcharter)
+
 mydata <- read.csv("Data/Titanic_data.csv")
 log_mod <- glm(Survived~Pclass+Sex+Age+Embarked+Title,
                data=mydata,family = "binomial")
 
-# Define server logic required to draw a histogram
+# Define server logic here
 shinyServer(function(input, output) {
     
-  
     
-    Name <- eventReactive(input$Confirm,{
-            a <- input$Name
-    })
-    
-    Title <- eventReactive(input$Confirm,{
-        a <- input$Title
-    })
-    
-    Pclass <-  eventReactive(input$Confirm,{
-        as.numeric(input$Pclass)
-    })
-    
-    Age <-  eventReactive(input$Confirm,{
-        (input$Age)
-    })
-    
-    Sex <-  eventReactive(input$Confirm,{
-        (input$Sex)
-    })
-    
-    Embarked <-  eventReactive(input$Confirm,{
-        (switch(input$Embark,
-                 "Cherbourg"= "C",
-                 "Queenstown" = "Q",
-                 "Southampton" = "S"
-                ))
-    })
-    
-    output$text2 <- renderText({
-        
-        
-        paste("Helo ",Name(), "! You are travelling from ",input$Embark, "to New York")
-    })
-    
-    output$pred <- renderText({
+  observeEvent(input$Confirm, {
+   
+   Pclass <- as.numeric(input$Pclass)
+   Age <- input$Age
+   Sex <- input$Sex
+   Title <- input$Title
+   Embarked <- input$Embark
+   newdat1 <- data.frame(Pclass,Sex,Age,Embarked,Title)
+   pred1 <- predict(log_mod,newdata = newdat1,type = "response")
+   pie_frame <- data.frame(pie = c(round(pred1,2),round(1-pred1,2)))
+   
+   output$dem_pie <- renderHighchart({
+     
+       hchart(type="pie",pie_frame, hcaes(y=pie,x=c("Alive","Dead")),name="Total",colors=list("lightgreen","tomato")) 
        
-        
-        #Age <- (input$Age)
-        #Embarked <- (switch(input$Embark,
-        #                                 "Cherbourg"= "C",
-        #                                 "Queenstown" = "Q",
-        #                                 "Southampton" = "S"
-        #))
-        #Title <- (input$Title)
-        
-        
-        Pclass <- Pclass()[1]
-        Age <- Pclass()[1]
-        Sex <- Sex()[1]
-        Title <- Title()[1]
-        Embarked <- Embarked()[1]
-        newdat1 <- data.frame(Pclass,Sex,Age,Embarked,Title)
-        pred1 <- (predict(log_mod,newdata = newdat1,type = "response"))
-        paste(" ANd your chances of survival is   ",round(pred1, digits = 2)
-              
-              )
+   })
+   
+   output$pred <-  renderText({
+        if(pred1 > 0.5) {
+        paste("Hello ",input$Name, "! Yout might just survive the journey")
+        } else {
+          paste("Hello ",input$Name,"! You might not survive the jounrney")
+        }
+          })
+      
     })
+    
+    
 })
 
 
